@@ -1,0 +1,69 @@
+version: "3.8"
+
+services:
+  # ----------------------------------------------------------------------------
+  # PostgreSQL Database (Required for production multi-tenant architecture)
+  # ----------------------------------------------------------------------------
+  postgres:
+    image: postgres:16-alpine
+    container_name: leadpilot-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-leadpilot_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-SuperSecretDbPassword123!}
+      POSTGRES_DB: ${POSTGRES_DB:-leadpilot}
+    volumes:
+      - leadpilot_pgdata:/var/lib/postgresql/data
+    ports:
+      - "127.0.0.1:5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-leadpilot_user} -d ${POSTGRES_DB:-leadpilot}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ----------------------------------------------------------------------------
+  # LeadPilot AI Next.js Application
+  # ----------------------------------------------------------------------------
+  leadpilot-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: leadpilot-web
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: "postgresql://${POSTGRES_USER:-leadpilot_user}:${POSTGRES_PASSWORD:-SuperSecretDbPassword123!}@postgres:5432/${POSTGRES_DB:-leadpilot}?schema=public"
+      AUTH_SECRET: ${AUTH_SECRET:-your-at-least-32-characters-long-auth-secret-key}
+      NEXT_PUBLIC_APP_URL: ${NEXT_PUBLIC_APP_URL:-https://leadpilot.yourdomain.com}
+      AI_PROVIDER: ${AI_PROVIDER:-GEMINI}
+      GEMINI_API_KEY: ${GEMINI_API_KEY}
+      PAYMENT_PROVIDER: ${PAYMENT_PROVIDER:-MOCK}
+      RAZORPAY_KEY_ID: ${RAZORPAY_KEY_ID:-}
+      RAZORPAY_KEY_SECRET: ${RAZORPAY_KEY_SECRET:-}
+      WHATSAPP_PROVIDER: ${WHATSAPP_PROVIDER:-MOCK}
+      EMAIL_PROVIDER: ${EMAIL_PROVIDER:-MOCK}
+    volumes:
+      - leadpilot_documents:/app/public/documents/properties
+    ports:
+      - "127.0.0.1:3000:3000"
+
+  # ----------------------------------------------------------------------------
+  # Cloudflare Tunnel (Zero Trust Ingress - No open ports or public IP needed)
+  # ----------------------------------------------------------------------------
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    container_name: leadpilot-tunnel
+    restart: unless-stopped
+    command: tunnel run
+    environment:
+      - TUNNEL_TOKEN=${CLOUDFLARE_TUNNEL_TOKEN}
+    depends_on:
+      - leadpilot-app
+
+volumes:
+  leadpilot_pgdata:
+  leadpilot_documents:

@@ -1,0 +1,52 @@
+name: Automated Dev Deployment (On Commit & Push)
+
+on:
+  push:
+    branches:
+      - dev
+      - develop
+      - main
+  pull_request:
+    branches:
+      - dev
+      - main
+
+jobs:
+  test-and-deploy:
+    name: Test & Deploy to Dev Environment
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Checkout Code
+        uses: actions/checkout@v4
+
+      - name: ⚙️ Setup Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "npm"
+
+      - name: 📦 Install Dependencies
+        run: npm ci
+
+      - name: 🗄️ Generate Prisma Client (SQLite Test Engine)
+        run: npx prisma generate --schema=prisma/schema.sqlite.prisma
+        env:
+          DATABASE_URL: "file:./prisma/dev.db"
+
+      - name: 🧪 Run Automated Vitest Test Suite
+        run: npm test -- --run
+        env:
+          DATABASE_URL: "file:./prisma/dev.db"
+          AUTH_SECRET: "ci-test-secret-key-at-least-32-characters-minimum"
+
+      - name: 🏗️ Build Next.js Application
+        run: npm run build
+        env:
+          DATABASE_URL: "file:./prisma/dev.db"
+          AUTH_SECRET: "ci-test-secret-key-at-least-32-characters-minimum"
+
+      - name: 🐳 Build Test Docker Image
+        run: |
+          docker build -t leadpilot-dev:${{ github.sha }} .
+

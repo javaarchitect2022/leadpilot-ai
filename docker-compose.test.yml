@@ -1,0 +1,42 @@
+version: "3.8"
+
+# ==============================================================================
+# LeadPilot AI — TEST / STAGING DOCKER COMPOSE (SQLite Engine, No Postgres)
+# ==============================================================================
+
+services:
+  leadpilot-test-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: leadpilot-test
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: "file:/app/prisma/dev.db"
+      AUTH_SECRET: ${AUTH_SECRET:-test-secret-jwt-key-min-32-chars-length-123}
+      NEXT_PUBLIC_APP_URL: ${NEXT_PUBLIC_APP_URL:-http://localhost:3000}
+      AI_PROVIDER: ${AI_PROVIDER:-GEMINI}
+      GEMINI_API_KEY: ${GEMINI_API_KEY:-}
+      PAYMENT_PROVIDER: MOCK
+      WHATSAPP_PROVIDER: MOCK
+      EMAIL_PROVIDER: MOCK
+    volumes:
+      # Persist SQLite database and generated PDFs without needing PostgreSQL
+      - ./prisma/dev.db:/app/prisma/dev.db
+      - ./public/documents/properties:/app/public/documents/properties
+    ports:
+      - "3000:3000"
+
+  # ----------------------------------------------------------------------------
+  # Cloudflare Quick Tunnel (Zero config, free temporary public HTTPS URL)
+  # Check logs using: docker compose -f docker-compose.test.yml logs cloudflared-test
+  # ----------------------------------------------------------------------------
+  cloudflared-test:
+    image: cloudflare/cloudflared:latest
+    container_name: leadpilot-test-tunnel
+    restart: unless-stopped
+    command: tunnel --url http://leadpilot-test-app:3000
+    depends_on:
+      - leadpilot-test-app
+
