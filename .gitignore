@@ -78,3 +78,5 @@ Thumbs.db
 # Cloudflare & Vercel Deployment Artifacts
 .vercel
 .wrangler
+.open-next
+
