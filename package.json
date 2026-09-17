@@ -5,7 +5,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build && opennextjs-cloudflare build --skipNextBuild --dangerouslyUseUnsupportedNextVersion",
+    "build": "node -e \"const fs=require('fs'); if(fs.existsSync('.open-next')) fs.rmSync('.open-next',{recursive:true,force:true});\" && next build && opennextjs-cloudflare build --skipNextBuild --dangerouslyUseUnsupportedNextVersion",
     "build:worker": "opennextjs-cloudflare build --dangerouslyUseUnsupportedNextVersion",
     "start": "next start",
     "lint": "next lint",
