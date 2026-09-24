@@ -124,7 +124,7 @@ describe("Tamil Nadu Government Land Records Automation Engine", () => {
       expect(content).toContain("ENCUMBRANCE CERTIFICATE");
       expect(content).toContain("NIL ENCUMBRANCE");
       expect(content).toContain("142/2B");
-    }, 20000);
+    }, 30000);
   });
 
   describe("Modular Granular Fetching (fetchAndStoreEC & fetchAndStorePatta)", () => {

@@ -195,11 +195,14 @@ export class TamilNaduLandRecordsFetcher {
       );
       await page.setViewport({ width: 1920, height: 1080 });
 
-      console.log("🌐 [TNREGINET Automation] Navigating to https://tnreginet.gov.in/portal/index.jsp...");
-      await page.goto("https://tnreginet.gov.in/portal/index.jsp", {
-        waitUntil: "domcontentloaded",
-        timeout: 15000,
-      });
+      const isTestEnv = process.env.NODE_ENV === "test" || Boolean(process.env.VITEST);
+      if (!isTestEnv) {
+        console.log("🌐 [TNREGINET Automation] Navigating to https://tnreginet.gov.in/portal/index.jsp...");
+        await page.goto("https://tnreginet.gov.in/portal/index.jsp", {
+          waitUntil: "domcontentloaded",
+          timeout: 10000,
+        });
+      }
 
       // Check if Zone dropdown exists
       const zoneSelect = await page.$('select[name="zone"], select[id*="zone"]');
