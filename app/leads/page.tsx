@@ -147,7 +147,7 @@ export default function LeadsPage() {
           subtitle={`Showing ${leads.length} of ${total} leads • Qualified and tracked`}
         />
 
-        <main className="flex-1 p-8 space-y-6 overflow-y-auto">
+        <main className="flex-1 p-4 sm:p-6 lg:p-8 pb-24 md:pb-8 space-y-6 overflow-y-auto">
           {/* Action Bar */}
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
             {/* Search */}
@@ -298,7 +298,7 @@ export default function LeadsPage() {
           {/* Leads Table */}
           <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
             <div className="overflow-x-auto">
-              <table className="w-full text-left text-xs">
+              <table className="w-full text-left text-xs min-w-[720px]">
                 <thead className="bg-slate-50/80 text-slate-500 uppercase tracking-wider font-semibold border-b border-slate-200 text-[10px]">
                   <tr>
                     <th className="py-3 px-4 w-8">

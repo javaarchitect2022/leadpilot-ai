@@ -75,9 +75,9 @@ export default function FollowUpsPage() {
           subtitle="Proactive multi-channel outreach tracking to maximize conversion velocity"
         />
 
-        <main className="flex-1 p-8 space-y-6 overflow-y-auto">
+        <main className="flex-1 p-4 sm:p-6 lg:p-8 pb-24 md:pb-8 space-y-6 overflow-y-auto">
           {/* Tabs */}
-          <div className="flex items-center gap-2 border-b border-slate-200 pb-3">
+          <div className="flex items-center gap-2 border-b border-slate-200 pb-3 overflow-x-auto no-scrollbar">
             <button
               onClick={() => setActiveTab("TODAY")}
               className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all ${

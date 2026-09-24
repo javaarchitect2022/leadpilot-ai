@@ -1,8 +1,9 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Bell, Sparkles, Check, CheckCheck } from "lucide-react";
+import { Bell, Sparkles, Check, CheckCheck, Menu } from "lucide-react";
 import Link from "next/link";
+import { useNavigation } from "./navigation-context";
 
 interface HeaderProps {
   title: string;
@@ -13,6 +14,7 @@ export function Header({ title, subtitle }: HeaderProps) {
   const [notifications, setNotifications] = useState<any[]>([]);
   const [unreadCount, setUnreadCount] = useState(0);
   const [showNotifications, setShowNotifications] = useState(false);
+  const { toggleMobile } = useNavigation();
 
   const fetchNotifications = async () => {
     try {
@@ -43,13 +45,29 @@ export function Header({ title, subtitle }: HeaderProps) {
   };
 
   return (
-    <header className="h-16 bg-white border-b border-slate-200 px-8 flex items-center justify-between sticky top-0 z-20">
-      <div>
-        <h1 className="text-lg font-bold text-slate-900 tracking-tight leading-none">{title}</h1>
-        {subtitle && <p className="text-xs text-slate-500 mt-1">{subtitle}</p>}
+    <header className="h-16 bg-white border-b border-slate-200 px-4 sm:px-6 lg:px-8 flex items-center justify-between sticky top-0 z-20">
+      <div className="flex items-center gap-3 min-w-0">
+        <button
+          onClick={toggleMobile}
+          type="button"
+          className="md:hidden p-2 -ml-1 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          aria-label="Open navigation menu"
+        >
+          <Menu className="w-5 h-5" />
+        </button>
+        <div className="min-w-0">
+          <h1 className="text-base sm:text-lg font-bold text-slate-900 tracking-tight leading-none truncate">
+            {title}
+          </h1>
+          {subtitle && (
+            <p className="text-xs text-slate-500 mt-1 truncate hidden xs:block sm:block">
+              {subtitle}
+            </p>
+          )}
+        </div>
       </div>
 
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-2 sm:gap-4 shrink-0">
         {/* Ask AI quick button */}
         <Link
           href="/ai-assistant"
@@ -64,6 +82,7 @@ export function Header({ title, subtitle }: HeaderProps) {
           <button
             onClick={() => setShowNotifications(!showNotifications)}
             className="p-2 text-slate-500 hover:text-slate-800 hover:bg-slate-100 rounded-lg relative transition-colors"
+            aria-label="View notifications"
           >
             <Bell className="w-5 h-5" />
             {unreadCount > 0 && (
@@ -74,7 +93,7 @@ export function Header({ title, subtitle }: HeaderProps) {
           </button>
 
           {showNotifications && (
-            <div className="absolute right-0 mt-2 w-80 sm:w-96 bg-white rounded-xl shadow-xl border border-slate-200 py-2 z-50 text-sm animate-in fade-in zoom-in-95 duration-100">
+            <div className="absolute right-0 mt-2 w-[calc(100vw-2rem)] sm:w-96 max-w-sm bg-white rounded-xl shadow-xl border border-slate-200 py-2 z-50 text-sm animate-in fade-in zoom-in-95 duration-100">
               <div className="px-4 py-2 border-b border-slate-100 flex items-center justify-between">
                 <div className="font-semibold text-slate-800 text-sm">Notifications</div>
                 {unreadCount > 0 && (
@@ -129,4 +148,3 @@ export function Header({ title, subtitle }: HeaderProps) {
     </header>
   );
 }
-

@@ -126,7 +126,7 @@ export default function AiAssistantPage() {
           subtitle="Grounded natural language operations via controlled server-side tools"
         />
 
-        <main className="flex-1 flex flex-col p-6 overflow-hidden max-w-4xl w-full mx-auto">
+        <main className="flex-1 flex flex-col p-3 sm:p-6 pb-20 md:pb-6 overflow-hidden max-w-4xl w-full mx-auto">
           {/* Quick Prompts Carousel */}
           <div className="mb-4">
             <p className="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-2">

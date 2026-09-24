@@ -106,7 +106,7 @@ export default function TeamPage() {
           subtitle="Manage agency team members, role-based permissions, and lead assignments"
         />
 
-        <main className="flex-1 p-8 space-y-6 overflow-y-auto">
+        <main className="flex-1 p-4 sm:p-6 lg:p-8 pb-24 md:pb-8 space-y-6 overflow-y-auto">
           <div className="flex items-center justify-between">
             <div>
               <h3 className="font-bold text-slate-900 text-base">Organization Members</h3>
@@ -129,7 +129,7 @@ export default function TeamPage() {
           {/* Members Table */}
           <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
             <div className="overflow-x-auto">
-              <table className="w-full text-left text-xs">
+              <table className="w-full text-left text-xs min-w-[640px]">
                 <thead className="bg-slate-50 text-slate-500 uppercase font-semibold text-[10px]">
                   <tr>
                     <th className="py-3.5 px-6">User</th>

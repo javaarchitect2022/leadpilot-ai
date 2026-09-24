@@ -67,7 +67,7 @@ export default function AnalyticsPage() {
           subtitle="Multi-channel acquisition ROI, funnel velocity, and financial conversion tracking"
         />
 
-        <main className="flex-1 p-8 space-y-8 overflow-y-auto">
+        <main className="flex-1 p-4 sm:p-6 lg:p-8 pb-24 md:pb-8 space-y-6 sm:space-y-8 overflow-y-auto">
           {/* Top Summary Stats */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">

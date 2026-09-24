@@ -228,7 +228,7 @@ export default function LeadDetailPage() {
       <div className="flex-1 flex flex-col min-w-0">
         <Header title={lead.name} subtitle={`Lead ID: ${lead.id} • Source: ${lead.source}`} />
 
-        <main className="flex-1 p-8 space-y-6 overflow-y-auto">
+        <main className="flex-1 p-4 sm:p-6 lg:p-8 pb-24 md:pb-8 space-y-6 overflow-y-auto">
           {/* Back & Breadcrumb */}
           <Link
             href="/leads"
